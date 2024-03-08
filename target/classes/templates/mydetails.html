@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>My Details</title>
+</head>
+<body>
+<h2>My Details</h2>
+<div>Username: <span th:text="${user.username}"></span></div>
+<!-- Displaying the password is not a good security practice -->
+<!-- <div>Password: <span th:text="${user.password}"></span></div> -->
+</body>
+</html>

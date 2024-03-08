@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Użytkownicy</title>
+    <style>
+        body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #f4f4f4;
+        }
+
+        .navbar {
+        display: flex;
+        justify-content: space-between;
+        background-color: #333;
+        padding: 10px;
+        }
+
+        .navbar a {
+        color: white;
+        padding: 8px 16px;
+        text-decoration: none;
+        }
+
+        .navbar a:hover {
+        background-color: #ddd;
+        color: black;
+        }
+        table {
+        margin: 0 auto;
+        border-collapse: collapse;
+    }
+     table tr:nth-child(odd) {
+        background-color: #f2f2f2;
+    }
+
+    table tr:nth-child(even) {
+        background-color: #e9e9e9;
+    }
+
+    </style>
+</head>
+<body>
+<div class="navbar">
+    <a href="/">Główna</a>
+    <a href="/users">Użytkownicy</a>
+    <a href="/create-post">Nowy Post</a>
+    <a href="/logout" th:href="@{/logout}" style="margin-left: auto;">Wyloguj</a>
+</div>
+<div style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
+    <div style="display:flex;justify-content:center;align-items:center;">
+        <h2>
+            Użytkownicy
+        </h2>
+    </div>
+    <div style="display:flex;width:85%;">
+        <form id="settingsForm" action="/users" method="get">
+            <span>
+                <label for="size">Wyniki na stronę:</label>
+                <select name="size" id="size" onchange="submitForm()">
+                    <option th:each="pageSize : ${pageSizes}"
+                            th:value="${pageSize}"
+                            th:text="${pageSize}"
+                            th:selected="${pageSize == usersPage.size}"></option>
+                </select>
+
+            </span>
+            <span>
+                <label for="sort">Sortuj po:</label>
+                <select name="sort" id="sort" onchange="submitForm()">
+                    <option value="username,asc" th:selected="${sort.equals('username,asc')}">Username rosnąco</option>
+                    <option value="username,desc" th:selected="${sort.equals('username,desc')}">Username malejąco</option>
+                    <option value="email,asc" th:selected="${sort.equals('email,asc')}">Email rosnąco</option>
+                    <option value="email,desc" th:selected="${sort.equals('email,desc')}">Email malejąco</option>
+                </select>
+            </span>
+        </form>
+    </div>
+    <div style="width:85%;">
+        <table style="width:100%;margin-top:15px;margin-bottom:15px;">
+            <tr>
+                <th>Id</th>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Hasło zakodowane</th>
+            </tr>
+            <tr th:each="user : ${usersPage.content}">
+                <td th:text="${user.id}"></td>
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.password}"></td>
+            </tr>
+        </table>
+    </div>
+    <div>
+        <a th:href="@{/users(page=${usersPage.number - 1}, size=${usersPage.size}, sort=${sort})}" th:unless="${usersPage.first}">Previous</a>
+        <span th:text="${usersPage.number + 1}"></span>
+        <a th:href="@{/users(page=${usersPage.number + 1}, size=${usersPage.size}, sort=${sort})}" th:unless="${usersPage.last}">Next</a>
+    </div>
+</div>
+</body>
+<script>
+    function submitForm() {
+        document.getElementById("settingsForm").submit();
+    }
+</script>
+</html>
